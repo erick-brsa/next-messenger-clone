@@ -21,18 +21,26 @@ export const authOptions: NextAuthOptions = {
 		CredentialsProvider({
 			name: 'credentials',
 			credentials: {
-				email: { label: 'Email', type: 'text' },
-				password: { label: 'Password', type: 'password' }
+				email: { label: 'Email', type: 'text', placeholder: 'Email' },
+				password: {
+					label: 'Password',
+					type: 'password',
+					placeholder: 'Password'
+				}
 			},
 			async authorize(credentials) {
-				if (!credentials?.email || credentials?.password) {
-					throw new Error('Invalid Credentials');
+				console.log(credentials)
+				if (!credentials?.email) {
+					throw new Error('Email is required');
+				}
+				if (!credentials?.password) {
+					throw new Error('Password is required');
 				}
 				const user = await prisma.user.findUnique({
 					where: { email: credentials.email }
 				});
-				if (!user || user?.password) {
-					throw new Error('Invalid Credentials');
+				if (!user) {
+					throw new Error('User not found');
 				}
 				const checkPassword = await bcrypt.compare(
 					credentials.password,
@@ -46,10 +54,10 @@ export const authOptions: NextAuthOptions = {
 		})
 	],
 	callbacks: {
-		// async signIn({ user, account, profile, email, credentials }) {
-		// if a user is allowed to sign in
-		// return true;
-		// },
+		async signIn({ user, account, profile, email, credentials }) {
+			// if a user is allowed to sign in
+			return true;
+		},
 		// async redirect({ url, baseUrl }) {
 		// 	return baseUrl;
 		// },
@@ -57,14 +65,14 @@ export const authOptions: NextAuthOptions = {
 			// session.accessToken = token.accessToken;
 			// session.user.id = token.id;
 			return { ...session, user };
+		},
+		async jwt({ token, user, account, profile }) {
+			if (account) {
+				token.accessToken = account.accessToken;
+				token.id = user.id;
+			}
+			return token;
 		}
-		// async jwt({ token, user, account, profile }) {
-		// if (account) {
-		// token.accessToken = account.accessToken;
-		// token.id = user.id
-		// }
-		// return token;
-		// }
 	},
 	session: {
 		strategy: 'jwt'
