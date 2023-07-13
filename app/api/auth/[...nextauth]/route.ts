@@ -29,7 +29,6 @@ export const authOptions: NextAuthOptions = {
 				}
 			},
 			async authorize(credentials) {
-				console.log(credentials)
 				if (!credentials?.email) {
 					throw new Error('Email is required');
 				}
@@ -61,11 +60,12 @@ export const authOptions: NextAuthOptions = {
 		// async redirect({ url, baseUrl }) {
 		// 	return baseUrl;
 		// },
-		async session({ session, user, token }) {
+		// async session({ session, user, token }) {
 			// session.accessToken = token.accessToken;
+
 			// session.user.id = token.id;
-			return { ...session, user };
-		},
+			// return { ...session, user };
+		// },
 		async jwt({ token, user, account, profile }) {
 			if (account) {
 				token.accessToken = account.accessToken;
