@@ -20,7 +20,7 @@ const getCurrentUser = async () => {
 		}
 		return user;
 	} catch (error: any) {
-		console.log('Error Aquí', error);
+		console.log(error);
 		return null;
 	}
 };

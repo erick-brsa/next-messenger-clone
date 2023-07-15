@@ -3,7 +3,7 @@
 import { FC, useState } from 'react';
 import { User } from '@prisma/client';
 
-import Avatar from '@/components/Avatar';
+import Avatar from '@/components/ui/Avatar';
 import DesktopItem from './DesktopItem';
 import { useRoutes } from '@/hooks';
 
