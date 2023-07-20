@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { format } from 'date-fns';
 import clsx from 'clsx';
@@ -14,6 +14,7 @@ interface MessageBoxProps {
 
 const MessageBox: FC<MessageBoxProps> = ({ data, isLast }) => {
 	const session = useSession();
+	const [imageModalOpen, setImageModalOpen] = useState(false);
 	const isOwn = session?.data?.user?.email === data?.sender?.email;
 	const seenList = (data.seen || [])
 		.filter(user => user.email !== data?.sender?.email)

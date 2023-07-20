@@ -9,6 +9,7 @@ import Link from 'next/link';
 import { useOtherUser } from '@/hooks';
 import Avatar from '../ui/Avatar';
 import ProfileDrawer from './ProfileDrawer';
+import AvatarGroup from '../ui/AvatarGroup';
 
 interface HeaderProps {
 	conversation: Conversation & {
@@ -42,7 +43,13 @@ const Header: FC<HeaderProps> = ({ conversation }) => {
 					>
 						<HiChevronLeft size={32} />
 					</Link>
-					<Avatar user={otherUser} />
+
+					{conversation.isGroup ? (
+						<AvatarGroup users={conversation.users} />
+					) : (
+						<Avatar user={otherUser} />
+					)}
+
 					<div className="flex flex-col">
 						<div className="">
 							{conversation.name || otherUser.name}

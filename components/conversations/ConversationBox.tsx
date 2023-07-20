@@ -9,6 +9,7 @@ import clsx from 'clsx';
 import { FullConversationType } from '@/types';
 import { useOtherUser } from '@/hooks';
 import Avatar from '../ui/Avatar';
+import AvatarGroup from '../ui/AvatarGroup';
 
 interface ConversationBoxProps {
 	data: FullConversationType;
@@ -64,7 +65,13 @@ const ConversationBox: FC<ConversationBoxProps> = ({ data, selected }) => {
 			)}
 			onClick={handleClick}
 		>
-			<Avatar user={otherUser} />
+			{
+				data.isGroup ? (
+					<AvatarGroup users={data.users} />
+				) : (
+					<Avatar user={otherUser} />
+				)
+			}
 			<div className="min-w-0 flex-1">
 				<div className="focus:outline-none">
 					<div className="flex justify-between items-center mb-1">
