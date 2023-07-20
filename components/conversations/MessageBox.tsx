@@ -6,6 +6,7 @@ import clsx from 'clsx';
 import { FullMessageType } from '@/types';
 import Avatar from '../ui/Avatar';
 import Image from 'next/image';
+import ImageModal from '../modals/ImageModal';
 
 interface MessageBoxProps {
 	data: FullMessageType;
@@ -46,8 +47,14 @@ const MessageBox: FC<MessageBoxProps> = ({ data, isLast }) => {
 					</div>
 				</div>
 				<div className={message}>
+					<ImageModal
+						src={data.image}
+						isOpen={imageModalOpen}
+						onClose={() => setImageModalOpen(false)}
+					/>
 					{data.image ? (
 						<Image
+							onClick={() => setImageModalOpen(true)}
 							alt="Image"
 							height={288}
 							width={288}
@@ -58,13 +65,11 @@ const MessageBox: FC<MessageBoxProps> = ({ data, isLast }) => {
 						<div>{data.body}</div>
 					)}
 				</div>
-				{
-					isLast && isOwn && seenList.length > 0 && (
-						<div className='text-xs font-light text-gray-500'>
-							{`Seen by ${seenList}`}
-						</div>
-					)
-				}
+				{isLast && isOwn && seenList.length > 0 && (
+					<div className="text-xs font-light text-gray-500">
+						{`Seen by ${seenList}`}
+					</div>
+				)}
 			</div>
 		</div>
 	);
