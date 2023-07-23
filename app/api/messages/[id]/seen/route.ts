@@ -1,4 +1,5 @@
 import getCurrentUser from '@/lib/getCurrentUser';
+import { pusherServer } from '@/lib/pusher';
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prismadb';
 
@@ -34,7 +35,8 @@ export async function POST(req: Request, { params }: { params: IParams }) {
 		}
 
 		// Find the last message
-		const lastMessage = conversation.messages[conversation.messages.length - 1];
+		const lastMessage =
+			conversation.messages[conversation.messages.length - 1];
 
 		if (!lastMessage) {
 			return NextResponse.json(conversation);
@@ -57,6 +59,17 @@ export async function POST(req: Request, { params }: { params: IParams }) {
 				}
 			}
 		});
+
+		await pusherServer.trigger(currentUser.email, 'conversation:update', {
+			id: conversationId,
+			messages: [updatedMessage]
+		});
+
+		if (lastMessage.seenIds.indexOf(currentUser.id) !== -1) {
+			return NextResponse.json(conversation);
+		}
+
+		await pusherServer.trigger(conversationId!, 'message:update', updatedMessage)
 
 		return NextResponse.json(updatedMessage);
 	} catch (error) {

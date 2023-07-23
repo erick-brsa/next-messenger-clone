@@ -1,5 +1,7 @@
-import getCurrentUser from '@/lib/getCurrentUser';
 import { NextResponse } from 'next/server';
+
+import getCurrentUser from '@/lib/getCurrentUser';
+import { pusherServer } from '@/lib/pusher';
 import prisma from '@/lib/prismadb';
 
 interface IParams {
@@ -32,9 +34,20 @@ export async function DELETE(req: Request, { params }: { params: IParams }) {
 				}
 			}
 		});
+
+		existingConversation.users.forEach(user => {
+			if (user.email) {
+				pusherServer.trigger(
+					user.email,
+					'conversation:remove',
+					existingConversation
+				);
+			}
+		});
+
 		return NextResponse.json(deletedConversation);
 	} catch (error) {
-		console.log(error, 'ERROR_CONVERSATION_DELTE');
+		console.log(error, 'ERROR_CONVERSATION_DELETE');
 		return new NextResponse('Internal Error', { status: 500 });
 	}
 }

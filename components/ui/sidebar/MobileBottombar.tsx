@@ -19,7 +19,7 @@ const MobileSidebar: FC<MobileBottomBarProps> = ({ user }) => {
 	}
 
 	return (
-		<div className="fixed justify-between w-full bottom-0 x-40 flex items-center bg-white border-t-[1px] lg:hidden">
+		<div className="fixed justify-between w-full bottom-0 x-40 flex items-center bg-white border-t-[1px] lg:hidden z-50">
 			{routes.map(route => (
 				<MobileItem
 					key={route.href}
