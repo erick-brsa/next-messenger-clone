@@ -4,11 +4,11 @@ import { useMemo } from 'react';
 export const useConversation = () => {
 	const params = useParams();
 
-	const conversationId = useMemo(() => {
+	const conversationId: string = useMemo(() => {
 		if (!params?.id) {
 			return '';
 		}
-		return params.id;
+		return params.id as string;
 	}, [params?.id]);
 
 	const isOpen = useMemo(() => Boolean(conversationId), [conversationId]);
